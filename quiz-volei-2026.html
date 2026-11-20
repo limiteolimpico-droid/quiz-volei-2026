@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limite Vôlei – Quiz 2026</title>
+<meta name="description" content="Quiz sobre a temporada de vôlei 2026. 12 perguntas, 15 segundos cada. Quem acerta tudo ganha ouro. Ranking por velocidade.">
+<!-- Open Graph / Twitter -->
+<meta property="og:title" content="Limite Vôlei – Quiz 2026">
+<meta property="og:description" content="Doze perguntas sobre a VNL e a temporada de vôlei 2026. Ouro, prata ou bronze?">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://i.imgur.com/placeholder-volei.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Limite Vôlei – Quiz 2026">
+<meta name="twitter:description" content="Teste seus conhecimentos sobre a temporada de vôlei 2026. Ranking por acertos e velocidade.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: #06101c;
+  color: #e8e8e8;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+#app {
+  width: 100%;
+  max-width: 480px;
+  background: #0a1628;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+  position: relative;
+  min-height: 92vh;
+  border: 1px solid #1a2f4a;
+}
+.court-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(180deg, #0d1f3c 0%, #081428 100%),
+    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,165,0,0.05) 40px, rgba(255,165,0,0.05) 41px);
+  pointer-events: none;
+}
+.net {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    180deg,
+    #fff 0px,
+    #fff 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  transform: translateX(-50%);
+  opacity: 0.25;
+  z-index: 0;
+}
+.net::before, .net::after {
+  content: '';
+  position: absolute;
+  width: 70px;
+  height: 4px;
+  background: #ff7a00;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.5;
+}
+.net::before { top: 18%; }
+.net::after { bottom: 18%; }
+#start, #quiz, #result { padding: 28px 22px 32px; position: relative; z-index: 1; }
+#start, #result { display: flex; flex-direction: column; min-height: 92vh; }
+.hidden { display: none !important; }
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.logo-num {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ff7a00;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 26px;
+  color: #ff7a00;
+  background: rgba(255,122,0,0.08);
+}
+.logo-text { font-size: 14px; font-weight: 600; letter-spacing: 0.3px; }
+.logo-text small { display: block; font-size: 11px; font-weight: 400; opacity: 0.55; margin-top: 2px; color: #8ab4f8; }
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 12px 0 14px;
+  letter-spacing: -0.3px;
+}
+.desc {
+  font-size: 14.5px;
+  line-height: 1.5;
+  opacity: 0.75;
+  margin-bottom: 22px;
+}
+.name-input {
+  width: 100%;
+  background: rgba(20, 40, 70, 0.6);
+  border: 1px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: #fff;
+  font-family: inherit;
+  margin-bottom: 18px;
+}
+.name-input::placeholder { color: #5a6a80; }
+.name-input:focus { outline: none; border-color: #ff7a00; }
+.dots {
+  display: flex;
+  gap: 5px;
+  margin: 16px 0 22px;
+}
+.dots span {
+  width: 7px;
+  height: 7px;
+  background: #1e3a5f;
+  border-radius: 2px;
+}
+.medal-table {
+  width: 100%;
+  font-size: 13.5px;
+  margin-bottom: 20px;
+}
+.medal-table div {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid #1a3050;
+}
+.gold { color: #ffd54f; font-weight: 600; }
+.silver { color: #cfd8dc; font-weight: 600; }
+.bronze { color: #ff8a50; font-weight: 600; }
+.note {
+  font-size: 12.5px;
+  opacity: 0.55;
+  line-height: 1.45;
+  margin-bottom: 22px;
+}
+button.btn {
+  background: linear-gradient(135deg, #ff7a00, #e65c00);
+  color: #fff;
+  border: none;
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 15.5px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: auto;
+  box-shadow: 0 4px 15px rgba(255,122,0,0.3);
+}
+button.btn:active { transform: scale(0.985); }
+button.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+.q-progress { font-size: 12.5px; color: #ff7a00; font-weight: 600; }
+.q-sub { font-size: 11.5px; opacity: 0.5; margin-top: 3px; color: #8ab4f8; }
+.timer-big {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: #fff;
+}
+.timer-bar {
+  height: 3px;
+  background: #1a3050;
+  border-radius: 2px;
+  margin: 12px 0 22px;
+  overflow: hidden;
+}
+.timer-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff7a00, #ffd54f);
+  width: 100%;
+}
+.question {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 22px;
+  letter-spacing: -0.1px;
+}
+.lane-label {
+  font-size: 11.5px;
+  letter-spacing: 0.8px;
+  opacity: 0.45;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #8ab4f8;
+}
+.answers { display: flex; flex-direction: column; gap: 9px; }
+.answer {
+  background: rgba(20, 40, 70, 0.6);
+  border: 1px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 14.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.12s;
+}
+.answer:hover { border-color: #ff7a00; background: rgba(255,122,0,0.08); }
+.answer .letter {
+  width: 24px;
+  font-weight: 700;
+  color: #ff7a00;
+  font-size: 14px;
+}
+.answer.correct { background: rgba(46, 204, 113, 0.2); border-color: #2ecc71; }
+.answer.wrong { background: rgba(231, 76, 60, 0.2); border-color: #e74c3c; }
+.answer.disabled { pointer-events: none; }
+
+.result-medal { font-size: 58px; text-align: center; margin: 8px 0 4px; }
+.result-title { font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+.result-sub { text-align: center; opacity: 0.7; margin-bottom: 18px; font-size: 14.5px; }
+.summary {
+  background: rgba(20, 40, 70, 0.4);
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+}
+.summary div { display: flex; justify-content: space-between; padding: 5px 0; }
+.review {
+  max-height: 220px;
+  overflow-y: auto;
+  background: rgba(10, 20, 35, 0.5);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.review-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #1a3050;
+}
+.review-item:last-child { border-bottom: none; }
+.review-item .ok { color: #2ecc71; }
+.review-item .fail { color: #e74c3c; }
+.ranking { margin-top: 4px; font-size: 13.5px; }
+.ranking h3 { font-size: 12px; color: #ff7a00; margin-bottom: 10px; letter-spacing: 0.6px; }
+.ranking div { padding: 7px 0; border-bottom: 1px solid #1a3050; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="court-bg"></div>
+  <div class="net"></div>
+
+  <div id="start">
+    <div class="logo-box">
+      <div class="logo-num">🏐</div>
+      <div class="logo-text">LIMITE VÔLEI<br><small>QUIZ 2026</small></div>
+    </div>
+    <h1>A MEDALHA ESTÁ NA REDE.</h1>
+    <p class="desc">Doze perguntas sobre a temporada de vôlei 2026. Doze acertos valem ouro. Onze, prata. Dez, bronze.</p>
+    <input type="text" class="name-input" id="player-name" placeholder="Seu nome no ranking" maxlength="20">
+    <div class="dots">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="medal-table">
+      <div><span class="gold">OURO</span><span>12 acertos</span></div>
+      <div><span class="silver">PRATA</span><span>11 acertos</span></div>
+      <div><span class="bronze">BRONZE</span><span>10 acertos</span></div>
+    </div>
+    <p class="note">Quinze segundos por pergunta. Responder rápido define a posição no ranking.</p>
+    <div class="ranking" id="start-ranking" style="margin-top:16px; margin-bottom:16px;"></div>
+    <button class="btn" id="start-btn" onclick="startGame()" disabled>Começar</button>
+  </div>
+
+  <div id="quiz" class="hidden">
+    <div class="quiz-header">
+      <div>
+        <div class="q-progress" id="q-num">01 / 12</div>
+        <div class="q-sub">QUADRA</div>
+      </div>
+      <div class="timer-big" id="timer">15,0</div>
+    </div>
+    <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+    <div class="question" id="question"></div>
+    <div class="lane-label">ESCOLHA A POSIÇÃO</div>
+    <div class="answers" id="answers"></div>
+  </div>
+
+  <div id="result" class="hidden">
+    <div class="result-medal" id="medal">🥇</div>
+    <div class="result-title" id="result-title"></div>
+    <div class="result-sub" id="result-sub"></div>
+    <div class="summary" id="summary"></div>
+    <div class="review" id="review"></div>
+    <div class="ranking" id="ranking"></div>
+    <button class="btn" style="margin-top:16px;" onclick="location.reload()">Jogar novamente</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {q:"Quantos pontos Julia Bergmann marcou na VNL Feminina 2026?", a:["198","235","256","278"], c:1},
+  {q:"Quem foi a maior pontuadora da seleção brasileira na VNL Feminina 2026?", a:["Julia Bergmann","Ana Cristina","Gabi Guimarães","Julia Kudiess"], c:1},
+  {q:"Em qual clube da Superliga 2026/27 o oposto Bryan Lucas está jogando?", a:["Guarulhos","Sesi Bauru","Itambé Minas","Sada Cruzeiro"], c:2},
+  {q:"Melissa Vargas foi MVP de quais duas competições em 2026?", a:["VNL e Mundial","VNL e Europeu","Europeu e Asiático","VNL e Sul-Americano"], c:1},
+  {q:"Quantos pontos Melissa Vargas fez na final da VNL 2026 contra o Brasil?", a:["25","28","33","36"], c:2},
+  {q:"Quem liderou a pontuação e o ataque da VNL Masculina 2026?", a:["Tomasz Fornal","Jake Hanes","Aleksandar Nikolov","Ran Takahashi"], c:2},
+  {q:"Qual brasileira foi a melhor bloqueadora da VNL Feminina 2026?", a:["Ana Cristina","Julia Bergmann","Julia Kudiess","Rosamaria Montibeller"], c:2},
+  {q:"Quem foi a maior pontuadora da VNL Feminina 2026?", a:["Melissa Vargas","Kiera Van Ryk","Ana Cristina","Zhuang Yushan"], c:1},
+  {q:"A Finlândia eliminou qual seleção nas quartas do Europeu Masculino 2026?", a:["Polônia","França","Itália","Eslovênia"], c:2},
+  {q:"Qual seleção venceu a European League Feminina em 2026?", a:["Polônia","Suécia","Turquia","Sérvia"], c:1},
+  {q:"O que a Tailândia conquistou ao vencer o Asiático Feminino 2026?", a:["Primeira medalha de prata","Vaga direta para Los Angeles 2028","Título contra o Japão","Melhor campanha no VNL"], c:1},
+  {q:"Cuba voltou às Olimpíadas ao vencer quem na final do qualificatório NORCECA?", a:["Estados Unidos","Canadá","República Dominicana","Porto Rico"], c:1},
+  {q:"Qual seleção foi campeã da VNL Feminina 2026?", a:["Brasil","Itália","Turquia","Estados Unidos"], c:2},
+  {q:"O Brasil ficou em qual posição na VNL Feminina 2026?", a:["Campeão","Vice-campeão","Terceiro","Quarto"], c:1},
+  {q:"Quem foi o MVP do Sul-Americano Masculino 2026?", a:["Darlan Souza","Bryan Lucas","Ricardo Lucarelli","Adriano Xavier"], c:2},
+  {q:"Julia Bergmann foi para qual clube italiano em 2026/27?", a:["Conegliano","Novara","Scandicci","Milano"], c:2},
+  {q:"Ana Cristina jogou a temporada 2026/27 em qual clube?", a:["VakıfBank","Eczacıbaşı","Fenerbahçe","Türk Hava Yolları"], c:2},
+  {q:"Qual canadense liderou os bloqueios da VNL Masculina 2026?", a:["Nathan Hoag","Jackson Howe","Ryan Sclater","Jordan Schnitzer"], c:1},
+  {q:"A Suécia sediou uma chave do Europeu Feminino 2026 em qual cidade?", a:["Estocolmo","Gotemburgo","Malmö","Uppsala"], c:1},
+  {q:"Quem foi o MVP da VNL Masculina 2026?", a:["Aleksandar Nikolov","Tomasz Fornal","Jake Hanes","Wilfredo León"], c:1},
+  {q:"A Polônia venceu a VNL Masculina 2026 na final contra qual seleção?", a:["Japão","Itália","Estados Unidos","Eslovênia"], c:2},
+  {q:"O Brasil foi campeão do Sul-Americano Feminino 2026 vencendo a Argentina por?", a:["3-1","3-0","3-2","2-3"], c:1},
+  {q:"Qual posição o Brasil terminou na fase preliminar da VNL Masculina 2026?", a:["5º","7º","9º","11º"], c:2},
+  {q:"Julia Kudiess sofreu lesão em qual parte do corpo durante a VNL 2026?", a:["Ombro","Tornozelo","Joelho (LCA)","Cotovelo"], c:2},
+  {q:"Quantos pontos de bloqueio Julia Kudiess fez na fase preliminar da VNL 2026?", a:["32","38","42","48"], c:2},
+  {q:"O Brasil garantiu vaga olímpica no masculino ao vencer o Sul-Americano 2026. Em qual cidade foi o torneio?", a:["São Paulo","Recife","Rio de Janeiro","Belo Horizonte"], c:2},
+  {q:"Quem foi a melhor sacadora da VNL Feminina 2026?", a:["Melissa Vargas","Ekaterina Antropova","Kiera Van Ryk","Ana Cristina"], c:1},
+  {q:"A Finlândia conquistou qual medalha no Europeu Masculino 2026?", a:["Ouro","Prata","Bronze","Quarto lugar"], c:2},
+  {q:"Bryan Lucas fez quantos pontos na VNL 2026 (total)?", a:["28","36","44","52"], c:2},
+  {q:"Qual seleção foi vice-campeã da VNL Feminina 2026?", a:["Itália","Brasil","China","Canadá"], c:1},
+  {q:"A Tailândia venceu a final do Asiático Feminino 2026 contra qual seleção?", a:["Japão","China","Coreia do Sul","Irã"], c:1},
+  {q:"Quem foi o melhor levantador da fase preliminar da VNL Masculina 2026?", a:["Cachopa","Antoine Brizard","Simone Giannelli","Bruno Rezende"], c:1},
+  {q:"Quem foi o campeão da VNL Masculina 2026?", a:["Estados Unidos","Polônia","Japão","Eslovênia"], c:1},
+  {q:"Qual foi o placar da final da VNL Masculina 2026?", a:["Polônia 3-0 EUA","EUA 3-2 Polônia","Polônia 3-2 EUA","Polônia 3-1 EUA"], c:2},
+  {q:"Qual seleção ficou com o bronze na VNL Masculina 2026?", a:["Itália","Japão","Eslovênia","Turquia"], c:2},
+  {q:"Em que posição o Brasil terminou a VNL Masculina 2026?", a:["7º","9º","10º","12º"], c:2},
+  {q:"Qual o placar da final da VNL Feminina 2026?", a:["Turquia 3-0 Brasil","Turquia 3-1 Brasil","Brasil 3-2 Turquia","Turquia 3-2 Brasil"], c:1},
+  {q:"Quem foi a MVP da VNL Feminina 2026 e quantos pontos fez na final?", a:["Melissa Vargas – 33 pontos","Ana Cristina – 25 pontos","Paola Egonu – 28 pontos","Kiera Van Ryk – 30 pontos"], c:0},
+  {q:"Quantas pratas o Brasil já tem na história da VNL Feminina após 2026?", a:["3","4","5","6"], c:2},
+  {q:"Quem venceu o Campeonato Sul-Americano Masculino 2026 e garantiu vaga olímpica?", a:["Argentina","Brasil","Chile","Colômbia"], c:1},
+  {q:"Qual seleção venceu o Europeu Masculino 2026 e se classificou para Los Angeles 2028?", a:["França","Polônia","Itália","Eslovênia"], c:1},
+  {q:"Qual país venceu o Campeonato Asiático Masculino 2026 e garantiu a vaga olímpica da Ásia?", a:["Irã","Japão","Coreia do Sul","China"], c:1},
+  {q:"Qual seleção africana garantiu a vaga olímpica masculina de 2028?", a:["Egito","Camarões","Tunísia","Argélia"], c:2},
+  {q:"Qual país venceu o Europeu Feminino 2026?", a:["Itália","Turquia","Sérvia","Polônia"], c:1},
+  {q:"Qual seleção venceu o Campeonato Asiático Feminino 2026?", a:["China","Japão","Tailândia","Coreia do Sul"], c:2},
+  {q:"Qual brasileira foi a maior pontuadora do Brasil na final da VNL Feminina 2026?", a:["Julia Bergmann","Rosamaria","Ana Cristina","Luzia"], c:2},
+  {q:"Gabi Guimarães não jogou a VNL 2026. Qual foi o motivo?", a:["Lesão na lombar","Suspensão","Problema no joelho","Descanso programado"], c:0},
+  {q:"Onde foi a final da VNL Masculina 2026?", a:["Macau","Ningbo (China)","Rio de Janeiro","Milão"], c:1},
+  {q:"Onde foi a final da VNL Feminina 2026?", a:["Ningbo","Macau","Istambul","Ancara"], c:1},
+  {q:"Qual seleção masculina ficou invicta na fase preliminar da VNL 2026?", a:["Polônia","Japão","Estados Unidos","Eslovênia"], c:1},
+  {q:"Quantos títulos a Polônia tem na VNL Masculina após 2026?", a:["2","3","4","5"], c:1},
+  {q:"Quem foi o MVP do Europeu Masculino 2026?", a:["Tomasz Fornal","Wilfredo León","Antoine Brizard","Théo Faure"], c:1},
+  {q:"Quem venceu o NORCECA Masculino 2026?", a:["Canadá","Cuba","Estados Unidos","República Dominicana"], c:2},
+  {q:"Quem venceu o Campeonato Sul-Americano Feminino 2026 e foi MVP?", a:["Argentina / Bianca Cugno","Brasil / Gabi","Colômbia / Ana Karina","Brasil / Ana Cristina"], c:1},
+  {q:"Quem foi o melhor levantador brasileiro na VNL Masculina 2026?", a:["Bruno","Fernando Cachopa","Matheus","Arthur"], c:1},
+  {q:"Qual oposto brasileiro se destacou como um dos melhores sacadores da VNL Masculina 2026?", a:["Alan","Darlan","Lucarelli","Maurício"], c:1},
+  {q:"Qual brasileiro foi eleito um dos melhores ponteiros do Sul-Americano 2026?", a:["Lucarelli","Adriano","Bergmann","Honorato"], c:1},
+  {q:"Quem liderou os saques na VNL Masculina 2026?", a:["Jake Hanes (EUA)","Tomasz Fornal","Aleksandar Nikolov","Darlan Souza"], c:0},
+  {q:"O jovem oposto Bryan Lucas fez sua estreia pela seleção em 2026. Depois da VNL e do Sul-Americano, foi para qual clube da Superliga?", a:["Guarulhos","Sesi Bauru","Itambé Minas","Sada Cruzeiro"], c:2},
+  {q:"A Finlândia subiu para qual posição no ranking mundial após o bronze no Europeu 2026?", a:["5º","8º","10º","12º"], c:2},
+  {q:"Julia Bergmann esteve entre as líderes da VNL Feminina 2026 em pontuação e também em quais fundamentos?", a:["Apenas bloqueio","Saque e recepção","Apenas ataque","Defesa e saque"], c:1},
+  {q:"Melissa Vargas marcou quantos pontos na final do Campeonato Europeu 2026?", a:["25","28","33","36"], c:1},
+  {q:"Qual seleção ficou com o bronze na VNL Feminina 2026?", a:["Brasil","Itália","China","Canadá"], c:1},
+  {q:"Qual seleção conquistou o bronze na VNL Masculina 2026 (primeiro pódio da história)?", a:["Itália","Japão","Eslovênia","Turquia"], c:2},
+  {q:"Quem registrou o saque mais rápido da VNL Masculina 2026?", a:["Jake Hanes (EUA)","Darlan Souza","Wilfredo León","Aleksandar Nikolov"], c:0},
+  {q:"Qual foi a velocidade aproximada do saque mais rápido da VNL Masculina 2026 (Jake Hanes)?", a:["128 km/h","132 km/h","137 km/h","142 km/h"], c:2},
+  {q:"Melissa Vargas chegou perto de qual marca de velocidade no saque durante a VNL 2026?", a:["105 km/h","111 km/h","118 km/h","125 km/h"], c:1},
+  {q:"Quem liderou a quantidade de aces (saques ponto) na VNL Feminina 2026?", a:["Melissa Vargas","Ekaterina Antropova","Kiera Van Ryk","Ana Cristina"], c:1},
+  {q:"Quantos aces Jake Hanes fez na VNL Masculina 2026 (líder de saques)?", a:["18","22","26","31"], c:2},
+  {q:"Quem foi o melhor levantador da VNL Masculina 2026 (fase preliminar)?", a:["Antoine Brizard","Planinšič (Eslovênia)","Cachopa","Fukatsu"], c:1},
+  {q:"Quem foi a melhor levantadora da VNL Feminina 2026?", a:["Alessia Orro","Daria Sharhorodska","Mirković","Fransen"], c:1},
+  {q:"Qual seleção venceu o Campeonato Europeu Feminino 2026?", a:["Itália","Turquia","Sérvia","Polônia"], c:1},
+  {q:"Quem foi o MVP do Campeonato Europeu Feminino 2026?", a:["Melissa Vargas","Alessia Orro","Myriam Sylla","Zehra Güneş"], c:0},
+  {q:"O Japão terminou a fase preliminar da VNL Masculina 2026 com quantas vitórias?", a:["10","11","12","9"], c:2},
+  {q:"Ana Cristina marcou quantos pontos na quartas de final da VNL 2026 contra o Japão?", a:["22","26","30","34"], c:2},
+  {q:"Quantos títulos a Turquia tem na VNL Feminina após 2026?", a:["1","2","3","4"], c:1},
+  {q:"Ran Takahashi marcou quantos pontos na vitória do Japão sobre os EUA na VNL 2026 (quando o Japão virava 0-2)?", a:["18","22","26","30"], c:2},
+  {q:"Qual ponteiro japonês foi fundamental para o Japão terminar invicto a fase preliminar da VNL Masculina 2026?", a:["Yuki Ishikawa","Yuji Nishida","Ran Takahashi","Akihiro Yamauchi"], c:2},
+  {q:"Os irmãos Nikolov (Aleksandar e Simeon) jogam por qual seleção?", a:["Sérvia","Bulgária","Eslovênia","Croácia"], c:1},
+  {q:"Qual irmão Nikolov liderou a pontuação da VNL Masculina 2026?", a:["Simeon","Aleksandar","Vladimir","Philip"], c:1},
+  {q:"Os irmãos finlandeses Luka e Nooa Marttila foram destaques em qual resultado histórico do Europeu 2026?", a:["Vitória sobre a Polônia","Eliminação da Itália nas quartas","Final contra a França","Bronze sobre a Eslovênia"], c:1},
+  {q:"A China eliminou qual seleção nas quartas de final da VNL Feminina 2026 (a que terminou em 1º na fase preliminar)?", a:["Itália","Brasil","Estados Unidos","Turquia"], c:2},
+  {q:"Qual foi o placar da surpresa da China sobre os EUA nas quartas da VNL Feminina 2026?", a:["3-0","3-1","3-2","2-3"], c:2},
+  {q:"Quem foi o melhor defensor (digs) da VNL Masculina 2026?", a:["Erik Shoji","Franco Massimino (Argentina)","Ran Takahashi","Maique"], c:1},
+  {q:"Quem liderou as defesas na VNL Feminina 2026?", a:["Eleonora Fersino (Itália)","Marcelle","Nyeme","Gelin"], c:0},
+  {q:"Yuji Nishida é conhecido por ser canhoto e joga em qual posição pelo Japão?", a:["Ponteiro","Oposto","Central","Levantador"], c:1},
+  {q:"O trio japonês Ran Takahashi, Yuki Ishikawa e Yuji Nishida foi fundamental para o Japão terminar a fase preliminar da VNL 2026 com quantas vitórias?", a:["10","11","12","9"], c:2},
+  {q:"Aleksandar Nikolov marcou quantos pontos na VNL Masculina 2026 (líder de pontuação)?", a:["248","262","278","294"], c:2},
+  {q:"A Itália venceu a disputa do bronze da VNL Feminina 2026 contra qual seleção?", a:["China","Brasil","Canadá","Estados Unidos"], c:0},
+  {q:"Qual seleção masculina ficou invicta em toda a fase preliminar da VNL 2026?", a:["Polônia","Estados Unidos","Japão","Eslovênia"], c:2},
+  {q:"Gabi Guimarães ficou de fora da VNL 2026 por causa de lesão em qual região?", a:["Joelho","Ombro","Lombar","Costela"], c:2},
+  {q:"Roberta se consolidou como levantadora titular do Brasil em qual fase da VNL 2026?", a:["Primeira semana","Segunda semana","Terceira semana (Osaka)","Fase final"], c:2},
+  {q:"Diana se destacou na VNL 2026 especialmente em qual fundamento, além do ataque?", a:["Saque","Bloqueio","Defesa","Recepção"], c:1},
+  {q:"Ana Cristina e Julia Bergmann assumiram o protagonismo ofensivo do Brasil na VNL 2026 principalmente por causa da ausência de quem?", a:["Rosamaria","Gabi Guimarães","Tainara","Nyeme"], c:1},
+  {q:"Qual central brasileira dividiu a liderança de bloqueios da VNL Feminina 2026 com Julia Kudiess?", a:["Diana","Luzia","Lorena","Lanna"], c:0},
+  {q:"O Brasil conquistou qual medalha na VNL Feminina 2026?", a:["Ouro","Prata","Bronze","Quarto lugar"], c:1},
+  {q:"Marcelle assumiu a titularidade de líbero do Brasil na VNL 2026 na ausência de quem?", a:["Nyeme","Natinha","Kika","Paulina"], c:0},
+  {q:"Ana Cristina terminou a VNL 2026 como a quanta maior pontuadora do torneio?", a:["3ª","4ª","5ª","6ª"], c:2},
+  {q:"Julia Bergmann terminou a VNL 2026 entre as melhores do torneio também em qual fundamento além da pontuação?", a:["Bloqueio","Recepção/Passe","Defesa","Saque apenas"], c:1},
+  {q:"José Roberto Guimarães foi suspenso na VNL 2026 por qual motivo envolvendo o técnico da Bulgária?", a:["Discussão com o árbitro","Gesto de ‘banana’","Reclamação excessiva no banco","Entrada atrasada no ginásio"], c:1},
+  {q:"A suspensão de Zé Roberto por causa do gesto para o técnico da Bulgária fez com que ele perdesse qual jogo da VNL 2026?", a:["Brasil x Itália","Brasil x França","Brasil x Turquia","Brasil x Japão"], c:1}
+];
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playTone(freq, duration, type = 'sine', volume = 0.12) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+function soundTick() { playTone(920, 0.07, 'sine', 0.06); }
+function soundCorrect() { playTone(523, 0.12); setTimeout(() => playTone(659, 0.18), 90); }
+function soundWrong() { playTone(196, 0.22, 'sawtooth', 0.1); }
+function soundStart() { playTone(440, 0.08); setTimeout(() => playTone(554, 0.08), 70); setTimeout(() => playTone(659, 0.16), 140); }
+function soundFinish() { playTone(659, 0.18); setTimeout(() => playTone(784, 0.28), 140); }
+
+let gameQuestions = [];
+let userAnswers = [];
+let current = 0;
+let score = 0;
+let totalTime = 0;
+let timeLeft = 15;
+let timerInterval;
+let answered = false;
+let playerName = '';
+
+document.getElementById('player-name').addEventListener('input', function() {
+  document.getElementById('start-btn').disabled = this.value.trim().length < 2;
+});
+
+function loadRanking() {
+  const key = 'volei2026_rank';
+  let ranking = JSON.parse(localStorage.getItem(key) || '[]');
+  ranking.sort((a, b) => b.score - a.score || a.time - b.time);
+  ranking = ranking.slice(0, 8);
+  let html = '<h3>RANKING</h3>';
+  if (ranking.length === 0) {
+    html += '<div style="opacity:0.5">Nenhum resultado ainda</div>';
+  } else {
+    ranking.forEach((r, i) => {
+      html += `<div><span>${i + 1}º ${r.name}</span><span>${r.score}/12 • ${r.time.toFixed(1).replace('.', ',')}s</span></div>`;
+    });
+  }
+  document.getElementById('start-ranking').innerHTML = html;
+}
+loadRanking();
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function startGame() {
+  playerName = document.getElementById('player-name').value.trim() || 'Anônimo';
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  soundStart();
+  gameQuestions = shuffle([...questions]).slice(0, 12);
+  userAnswers = [];
+  current = 0;
+  score = 0;
+  totalTime = 0;
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  if (current >= 12) { endGame(); return; }
+  answered = false;
+  timeLeft = 15.0;
+  const q = gameQuestions[current];
+  document.getElementById('q-num').textContent = String(current + 1).padStart(2, '0') + ' / 12';
+  document.getElementById('question').textContent = q.q;
+  const answersDiv = document.getElementById('answers');
+  answersDiv.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.a.forEach((text, i) => {
+    const div = document.createElement('div');
+    div.className = 'answer';
+    div.innerHTML = `<span class="letter">${letters[i]}</span><span>${text}</span>`;
+    div.onclick = () => selectAnswer(i);
+    answersDiv.appendChild(div);
+  });
+  updateTimer();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft -= 0.1;
+    if (timeLeft <= 0) {
+      timeLeft = 0;
+      clearInterval(timerInterval);
+      if (!answered) selectAnswer(-1);
+    }
+    updateTimer();
+    if (Math.abs(timeLeft - Math.round(timeLeft)) < 0.05 && timeLeft > 0 && timeLeft < 15) soundTick();
+  }, 100);
+}
+
+function updateTimer() {
+  document.getElementById('timer').textContent = timeLeft.toFixed(1).replace('.', ',');
+  document.getElementById('timer-fill').style.width = (timeLeft / 15 * 100) + '%';
+  document.getElementById('timer').style.color = timeLeft <= 5 ? '#ff6b6b' : '#fff';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+  totalTime += (15 - timeLeft);
+  const correct = gameQuestions[current].c;
+  userAnswers.push(idx);
+  const buttons = document.querySelectorAll('.answer');
+  buttons.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (i === correct) btn.classList.add('correct');
+    else if (i === idx) btn.classList.add('wrong');
+  });
+  if (idx === correct) {
+    score++;
+    soundCorrect();
+  } else {
+    soundWrong();
+  }
+  setTimeout(() => {
+    current++;
+    showQuestion();
+  }, 850);
+}
+
+function endGame() {
+  soundFinish();
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('result').classList.remove('hidden');
+
+  let medal = '🥉', title = 'Bronze';
+  if (score === 12) { medal = '🥇'; title = 'Ouro'; }
+  else if (score === 11) { medal = '🥈'; title = 'Prata'; }
+  else if (score < 10) { medal = '—'; title = 'Sem medalha'; }
+
+  document.getElementById('medal').textContent = medal;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = `${playerName} • ${score} de 12`;
+
+  const avgTime = (totalTime / 12).toFixed(1).replace('.', ',');
+  document.getElementById('summary').innerHTML = `
+    <div><span>Acertos</span><span>${score}/12</span></div>
+    <div><span>Tempo total</span><span>${totalTime.toFixed(1).replace('.', ',')}s</span></div>
+    <div><span>Média</span><span>${avgTime}s</span></div>
+  `;
+
+  let reviewHtml = '';
+  gameQuestions.forEach((q, i) => {
+    const userIdx = userAnswers[i];
+    const isCorrect = userIdx === q.c;
+    const status = isCorrect ? '<span class="ok">✓</span>' : '<span class="fail">✗</span>';
+    const correctText = q.a[q.c];
+    reviewHtml += `<div class="review-item">${status} ${q.q}<br><small style="opacity:0.7">Resposta: ${correctText}</small></div>`;
+  });
+  document.getElementById('review').innerHTML = reviewHtml;
+
+  const key = 'volei2026_rank';
+  let ranking = JSON.parse(localStorage.getItem(key) || '[]');
+  ranking.push({ name: playerName, score, time: Math.round(totalTime * 10) / 10 });
+  ranking.sort((a, b) => b.score - a.score || a.time - b.time);
+  ranking = ranking.slice(0, 8);
+  localStorage.setItem(key, JSON.stringify(ranking));
+
+  let html = '<h3>RANKING</h3>';
+  ranking.forEach((r, i) => {
+    html += `<div><span>${i + 1}º ${r.name}</span><span>${r.score}/12 • ${r.time.toFixed(1).replace('.', ',')}s</span></div>`;
+  });
+  document.getElementById('ranking').innerHTML = html;
+  loadRanking(); // atualiza também a tela inicial
+}
+</script>
+</body>
+</html>
